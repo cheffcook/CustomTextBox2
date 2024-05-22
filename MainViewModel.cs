@@ -1,35 +1,65 @@
-﻿using Prism.Mvvm;
+﻿using System.Collections.ObjectModel;
+using System.Windows;
+using Prism.Commands;
+using Prism.Mvvm;
 
-namespace CustomTextBox
+namespace ListViewSample
 {
-    internal class MainViewModel : BindableBase
+    public class ParameterItem
     {
-        private float _customValue1;
-        public float CustomValue1
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public double Value { get; set; }
+
+        public ParameterItem(int id, string name, double value)
         {
-            get => _customValue1;
-            set => SetProperty(ref _customValue1, value, nameof(CustomValue1));
+            Id = id;
+            Name = name;
+            Value = value;
+        }
+    }
+
+    public class MainViewModel : BindableBase
+    {
+        int idx = 0;
+        double vle = 123.45d;
+
+        public ObservableCollection<ParameterItem> ParametersList { get; set; }
+
+        private ParameterItem _selectedItem;
+        public ParameterItem SelectedItem
+        {
+            get => _selectedItem;
+            set
+            { 
+                SetProperty(ref _selectedItem, value, nameof(SelectedItem));
+            }
         }
 
-        private float _customValue2;
-        public float CustomValue2
+        public DelegateCommand PushButton { get; }
+        public DelegateCommand PushButtonPnl { get; set; }
+
+        public MainViewModel() 
         {
-            get => _customValue2;
-            set => SetProperty(ref _customValue2, value, nameof(CustomValue2));
+            ParametersList = new();
+
+            PushButton = new DelegateCommand(() => 
+            {
+                Something();
+            });
+
+            Something();
+
+            PushButtonPnl = new DelegateCommand(() =>
+            {
+                var txt = _selectedItem == null ? "NULL" : _selectedItem.Value.ToString();
+                MessageBox.Show(txt);
+            });
         }
 
-        private float _customValue3;
-        public float CustomValue3
+        private void Something()
         {
-            get => _customValue3;
-            set => SetProperty(ref _customValue3, value, nameof(CustomValue3));
-        }
-
-        public MainViewModel()
-        {
-            CustomValue1 = 12.3f;
-            CustomValue2 = 45.6f;
-            CustomValue3 = 78.9f;
+            ParametersList.Add(new ParameterItem(idx++, $"Par{idx}", vle * idx));
         }
     }
 }

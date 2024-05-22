@@ -2,7 +2,7 @@
 using System.Data;
 using System.Windows;
 
-namespace CustomTextBox
+namespace ListViewSample
 {
     /// <summary>
     /// Interaction logic for App.xaml
